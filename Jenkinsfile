@@ -21,7 +21,6 @@ dockerImage = docker.build registry + ":$BUILD_NUMBER"
 stage('Deploy our image') {
 steps{
 script {
-registryUrl 'https://index.docker.io/v1/'
 docker.withRegistry('', registryCredential ) {
 dockerImage.push()
 }
