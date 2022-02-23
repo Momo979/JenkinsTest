@@ -1,6 +1,6 @@
 pipeline {
 environment {
-registry = "hub.docker.com/repository/docker/momo979/purple-beard-team-2"
+registry = 'https://index.docker.io/v1/'
 registryCredential = 'Dockerhub-momo979'
 dockerImage = ''
 }
