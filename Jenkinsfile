@@ -1,6 +1,6 @@
 pipeline {
 environment {
-registry = 'https://index.docker.io/v1/'
+registry = "hub.docker.com/repository/docker/momo979/purple-beard-team-2"
 registryCredential = 'Dockerhub-momo979'
 dockerImage = ''
 }
@@ -21,7 +21,7 @@ dockerImage = docker.build registry + ":$BUILD_NUMBER"
 stage('Deploy our image') {
 steps{
 script {
-docker.withRegistry( '', registryCredential ) {
+docker.withRegistry( 'https://index.docker.io/v1/', registryCredential ) {
 dockerImage.push()
 }
 }
