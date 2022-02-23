@@ -1,7 +1,7 @@
 pipeline {
 environment {
 registry = "momo979/purple-beard-team-2"
-registryCredential = 'Dockerhub'
+registryCredential = 'dockerhub'
 dockerImage = ''
 }
 agent any
