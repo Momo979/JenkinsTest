@@ -1,31 +1,22 @@
 pipeline {
-  agent { label 'jenkins' }
-  options {
-    buildDiscarder(logRotator(numToKeepStr: '5'))
-  }
   environment {
-    DOCKERHUB_CREDENTIALS = credentials('dockerhub-token')
+    registry = "momo979/purple-beard-team-2"
+    registryCredential = ‘dockerhub-token’
   }
+  agent any
   stages {
-    stage('Build') {
+    stage('Cloning Git') {
       steps {
-        sh 'docker build -t momo979/purple-beard-team-2:latest .'
+        git 'https://github.com/Momo979/JenkinsTest.git'
       }
     }
-    stage('Login') {
-      steps {
-        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-      }
-    }
-    stage('Push') {
-      steps {
-        sh 'docker push momo979/purple-beard-team-2:latest'
+    stage('Building image') {
+      steps{
+        script {
+          docker.build registry + ":$BUILD_NUMBER"
+        }
       }
     }
   }
-  post {
-    always {
-      sh 'docker logout'
-    }
-  }
+}
 }
