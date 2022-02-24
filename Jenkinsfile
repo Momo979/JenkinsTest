@@ -1,36 +1,32 @@
 pipeline {
-environment {
-registry = "hub.docker.com/repository/docker/momo979/purple-beard-team-2"
-registryCredential = 'Dockerhub-token'
-dockerImage = ''
+  agent { label 'linux' }
+  options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('Dockerhub-token')
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh 'docker build -t Momo979/image:latest .'
+      }
+    }
+    stage('Login') {
+      steps {
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+      }
+    }
+    stage('Push') {
+      steps {
+        sh 'docker push Momo979/image:latest'
+      }
+    }
+  }
+  post {
+    always {
+      sh 'docker logout'
+    }
+  }
 }
-agent any
-stages {
-stage('Cloning our Git') {
-steps {
-git 'https://github.com/Momo979/JenkinsTest.git'
-}
-}
-stage('Building our image') {
-steps{
-script {
-dockerImage = docker.build registry + ":$BUILD_NUMBER"
-}
-}
-}
-stage('Deploy our image') {
-steps{
-script {
-docker.withRegistry('', registryCredential ) {
-dockerImage.push()
-}
-}
-}
-}
-stage('Cleaning up') {
-steps{
-sh "docker rmi $registry:$BUILD_NUMBER"
-}
-}
-}
-}
+
