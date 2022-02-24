@@ -5,11 +5,13 @@ pipeline {
   }
   environment {
     DOCKERHUB_CREDENTIALS = credentials('Dockerhub-token')
+    registry = "momo979/purple-beard-team-2"
+    dockerimage = ''
   }
   stages {
     stage('Build') {
       steps {
-        sh 'docker build -t Momo979/image:latest .'
+        dockerimage = 'docker build -t registry + ":$BUILD_NUMBER"
       }
     }
     stage('Login') {
@@ -19,7 +21,7 @@ pipeline {
     }
     stage('Push') {
       steps {
-        sh 'docker push Momo979/image:latest'
+        sh 'docker push dockerimage()'
       }
     }
   }
